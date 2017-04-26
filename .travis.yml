@@ -1,5 +1,9 @@
 language: python
 
+# Integration settings for Slack channel
+notifications:
+  slack: andela:IFUEJRU4uARfzKu11yTVkfH1
+
 # Cache the pip files
 cache:
   directories:
