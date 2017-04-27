@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 
 import logging
-import datetime
+# import datetime
 
 from django.http import HttpResponse
 from django.http import HttpResponseForbidden
@@ -32,15 +32,15 @@ from reportlab.lib.pagesizes import A4, cm
 from reportlab.platypus import (
     Paragraph,
     SimpleDocTemplate,
-    Table,
+    # Table,
     Spacer
 )
 
-from reportlab.lib import colors
+# from reportlab.lib import colors
 
-from wger import get_version
+# from wger import get_version
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 def workout_log(request, id, images=False, comments=False, uidb64=None, token=None):
