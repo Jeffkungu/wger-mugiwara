@@ -45,4 +45,3 @@ snowballstemmer==1.2.1
 Sphinx==1.5.5
 sqlparse==0.2.3
 webencodings==0.5.1
--e git+git@github.com:andela/wger-mugiwara.git@948e09678d32b66a69699c4ea547a868680553b6#egg=wger
