@@ -70,7 +70,7 @@ ALLOWED_HOSTS = ['wger-mugiwara.herokuapp.com']
 # This might be a good idea if you setup memcached
 #SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
-DATABASE_URL = 'postgresql:///postgresql'
+DATABASE_URL = 'postgresql:///test_wger'
 DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
 # Configure a real backend in production
 if DEBUG:
