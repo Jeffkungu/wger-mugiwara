@@ -1,1 +1,1 @@
-web: python manage.py collectstatic --noinput; gunicorn wger.wsgi --log-file -
+web: gunicorn wger.wsgi --log-file -
