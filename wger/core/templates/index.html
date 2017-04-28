@@ -91,19 +91,19 @@ day in your current workout:{% endblocktrans %} <strong>{{current_workout}}</str
             <tr>
                 <td>{% trans "Protein" %}</td>
                 <td>
-                    {{nutritional_info.total.protein|floatformat|default:"-/-"}} {% trans_weight_unit 'g' user %}
+                    {{nutritional_info.total.protein|floatformat|default:"-/-"}} {% trans_weight_unit 'g' User %}
                 </td>
             </tr>
             <tr>
                 <td>{% trans "Carbohydrates" %}</td>
                 <td>
-                    {{nutritional_info.total.carbohydrates|floatformat|default:"-/-"}} {% trans_weight_unit 'g' user %}
+                    {{nutritional_info.total.carbohydrates|floatformat|default:"-/-"}} {% trans_weight_unit 'g' User %}
                 </td>
             </tr>
             <tr>
                 <td>{% trans "Fat" %}</td>
                 <td>
-                    {{nutritional_info.total.fat|floatformat|default:"-/-"}} {% trans_weight_unit 'g' user %}
+                    {{nutritional_info.total.fat|floatformat|default:"-/-"}} {% trans_weight_unit 'g' User %}
                 </td>
             </tr>
         </table>
@@ -117,7 +117,7 @@ day in your current workout:{% endblocktrans %} <strong>{{current_workout}}</str
         {% if weight %}
         <p>
             {% trans "Your current weight is: "%}
-            {{weight.weight|floatformat}} {% trans_weight_unit 'kg' user %}
+            {{weight.weight|floatformat}} {% trans_weight_unit 'kg' User %}
         </p>
         <table class="table table-hover table-condensed">
             {% for entry_detail in last_weight_entries %}

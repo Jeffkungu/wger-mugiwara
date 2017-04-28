@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import dj_database_url
-import psycopg2
 from wger.settings_global import *
+from dj_database_url import parse as db_url
 
 # Use 'DEBUG = True' to get more details for server errors
 DEBUG = True
@@ -45,10 +45,11 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "core", "static"),
                     os.path.join(BASE_DIR, "weight", "static"),
                     os.path.join(BASE_DIR, "exercises", "static"),
                     os.path.join(BASE_DIR, "software", "static")
-)
-#  Add the Whitenoise to your Django application 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-#STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+                    )
+
+# Add the Whitenoise to your Django application
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     # added BowerFinder to list of static file finders
@@ -65,10 +66,10 @@ MEDIA_ROOT = '/Users/faithngetich/.local/share/wger/media'
 MEDIA_URL = '/media/'
 
 # Allow all hosts to access the application. Change if used in production.
-ALLOWED_HOSTS = ['wger-mugiwara.herokuapp.com']
+ALLOWED_HOSTS = ['wger-mugiwara.herokuapp.com', '127.0.0.1']
 
 # This might be a good idea if you setup memcached
-#SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 DATABASE_URL = 'postgresql:///test_wger'
 DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
@@ -80,4 +81,4 @@ if DEBUG:
 WGER_SETTINGS['EMAIL_FROM'] = 'wger Workout Manager <wger@example.com>'
 
 # Your twitter handle, if you have one for this instance.
-#WGER_SETTINGS['TWITTER'] = ''
+# WGER_SETTINGS['TWITTER'] = ''

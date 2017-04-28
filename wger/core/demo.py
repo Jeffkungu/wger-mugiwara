@@ -82,15 +82,15 @@ def create_demo_entries(user):
     weight_log = []
     workout = Workout(user=user, comment=_('Sample workout'))
     workout.save()
-    monday = DaysOfWeek.objects.get(pk=1)
-    wednesday = DaysOfWeek.objects.get(pk=3)
+    monday = DaysOfWeek.objects.get_or_create(pk=1)
+    wednesday = DaysOfWeek.objects.get_or_create(pk=3)
     day = Day(training=workout, description=_('Sample day'))
     day.save()
-    day.day.add(monday)
+    # day.day.add('monday')
 
     day2 = Day(training=workout, description=_('Another sample day'))
     day2.save()
-    day2.day.add(wednesday)
+    # day2.day.add(wednesday)
 
     # Biceps curls with dumbbell
     if language.short_name == 'de':

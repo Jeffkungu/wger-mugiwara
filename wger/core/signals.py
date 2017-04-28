@@ -27,8 +27,10 @@ def create_user_profile(sender, instance, created, **kwargs):
     '''
     Every new user gets a profile
     '''
+    # import pdb; pdb.set_trace()
     if created:
         UserProfile.objects.create(user=instance)
+        
 
 
 @disable_for_loaddata

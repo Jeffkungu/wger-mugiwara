@@ -224,10 +224,7 @@ def registration(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
-            user = Django_User.objects.create_user(username,
-                                                   email,
-                                                   password)
-            user.save()
+            user = User.objects.create_user(username, email, password)
 
             # Pre-set some values of the user's profile
             language = Language.objects.get(short_name=translation.get_language())
@@ -246,7 +243,7 @@ def registration(request):
 
             user.userprofile.save()
 
-            user = authenticate(username=username, password=password)
+            user = authenticate(username=username, email=email, password=password)
             django_login(request, user)
             messages.success(request, _('You were successfully registered'))
             return HttpResponseRedirect(reverse('core:dashboard'))

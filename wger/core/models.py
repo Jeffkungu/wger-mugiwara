@@ -179,7 +179,7 @@ by the US Department of Agriculture. It is extremely complete, with around
                                                           'notifications, e.g. email reminders for '
                                                           'workouts. This does not affect the '
                                                           'language used on the website.'),
-                                              default=2)
+                                              default=1)
 
     timer_active = models.BooleanField(verbose_name=_('Use pauses in workout timer'),
                                        help_text=_('Check to activate timer pauses between '

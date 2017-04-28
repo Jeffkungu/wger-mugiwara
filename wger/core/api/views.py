@@ -21,6 +21,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 
 from wger.core.models import (
+    User,
     UserProfile,
     Language,
     DaysOfWeek,
@@ -28,7 +29,9 @@ from wger.core.models import (
     RepetitionUnit,
     WeightUnit)
 from wger.core.api.serializers import (
+    UserSerializer,
     UsernameSerializer,
+    UserprofileSerializer,
     LanguageSerializer,
     DaysOfWeekSerializer,
     LicenseSerializer,
@@ -40,34 +43,33 @@ from wger.utils.permissions import UpdateOnlyPermission, WgerPermission
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
+    '''just tryout'''
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class UserViewSet(viewsets.ModelViewSet):
     '''
     API endpoint for workout objects
     '''
     is_private = True
-    serializer_class = UserprofileSerializer
-    permission_classes = (WgerPermission, UpdateOnlyPermission)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     ordering_fields = '__all__'
 
-    def get_queryset(self):
-        '''
-        Only allow access to appropriate objects
-        '''
-        return UserProfile.objects.filter(user=self.request.user)
-
-    def get_owner_objects(self):
-        '''
-        Return objects to check for ownership permission
-        '''
-        return [(User, 'user')]
-
-    @detail_route()
-    def username(self, request, pk):
-        '''
-        Return the username
-        '''
-
-        user = self.get_object().user
-        return Response(UsernameSerializer(user).data)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
