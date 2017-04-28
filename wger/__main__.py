@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 
-import os
+# import os
 import sys
 from invoke import run
 
@@ -24,15 +24,15 @@ version of the application. It simply redirects all arguments to the invoke
 command, which does all the work.
 '''
 
-invoke_cmd = 'invoke '
+INVOKE_CMD = 'invoke '
 
 
 def main():
     args = sys.argv[1:]
     if len(args):
-        run(invoke_cmd + ' '.join(args), pty=True)
+        run(INVOKE_CMD + ' '.join(args), pty=True)
     else:
-        run(invoke_cmd + '--list')
+        run(INVOKE_CMD + '--list')
 
 
 if __name__ == '__main__':

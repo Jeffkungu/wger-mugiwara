@@ -30,9 +30,9 @@ from django.views.generic import (
 )
 
 from wger.utils.generic_views import WgerFormMixin
-from wger.gym.models import Contract, Gym
+from wger.gym.models import Contract  # Gym
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class AddView(WgerFormMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateView):

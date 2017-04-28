@@ -34,53 +34,57 @@ def filter_dump(data, model_list, filename):
         json.dump(filter_data, outfile, indent=4)
 
 # This is a full dump of the DB
-fixture = open('data.json')
-data = json.load(fixture)
-fixture.close()
+
+
+FIXTURE = open('data.json')
+
+
+DATA = json.load(FIXTURE)
+FIXTURE.close()
 
 #
 # Ingredients
 #
-filter_dump(data, ('nutrition.ingredient',), 'ingredients.json')
-filter_dump(data, ('nutrition.weightunit',), 'weight_units.json')
-filter_dump(data, ('nutrition.ingredientweightunit',), 'ingredient_units.json')
+filter_dump(DATA, ('nutrition.ingredient',), 'ingredients.json')
+filter_dump(DATA, ('nutrition.weightunit',), 'weight_units.json')
+filter_dump(DATA, ('nutrition.ingredientweightunit',), 'ingredient_units.json')
 
 #
 # Exercises
 #
-filter_dump(data, ('exercises.muscle',), 'muscles.json')
-filter_dump(data, ('exercises.exercisecategory',), 'categories.json')
-filter_dump(data, ('exercises.exerciseimage',), 'exercise-images.json')
-filter_dump(data, ('exercises.exercise', 'exercises.exercisecomment',), 'exercises.json')
-filter_dump(data, ('exercises.equipment', 'exercises.equipment',), 'equipment.json')
+filter_dump(DATA, ('exercises.muscle',), 'muscles.json')
+filter_dump(DATA, ('exercises.exercisecategory',), 'categories.json')
+filter_dump(DATA, ('exercises.exerciseimage',), 'exercise-images.json')
+filter_dump(DATA, ('exercises.exercise', 'exercises.exercisecomment',), 'exercises.json')
+filter_dump(DATA, ('exercises.equipment', 'exercises.equipment',), 'equipment.json')
 
 #
 # Gym
 #
-filter_dump(data, ('gym.gym',), 'gyms.json')
-filter_dump(data, ('gym.gymconfig',), 'gym_config.json')
-filter_dump(data, ('gym.gymadminconfig',), 'gym_adminconfig.json')
-filter_dump(data, ('gym.gymuserconfig',), 'gym_userconfig.json')
-filter_dump(data, ('gym.adminusernote',), 'gym_admin_user_notes.json')
-filter_dump(data, ('gym.userdocument',), 'gym_user_documents.json')
-filter_dump(data, ('gym.contract',), 'gym_contracts.json')
+filter_dump(DATA, ('gym.gym',), 'gyms.json')
+filter_dump(DATA, ('gym.gymconfig',), 'gym_config.json')
+filter_dump(DATA, ('gym.gymadminconfig',), 'gym_adminconfig.json')
+filter_dump(DATA, ('gym.gymuserconfig',), 'gym_userconfig.json')
+filter_dump(DATA, ('gym.adminusernote',), 'gym_admin_user_notes.json')
+filter_dump(DATA, ('gym.userdocument',), 'gym_user_documents.json')
+filter_dump(DATA, ('gym.contract',), 'gym_contracts.json')
 
 #
 # Core
 #
-filter_dump(data, ('core.gym',), 'gyms.json')
-filter_dump(data, ('core.language',), 'languages.json')
-filter_dump(data, ('core.license',), 'licenses.json')
-filter_dump(data, ('core.repetitionunit',), 'repetition_units.json')
+filter_dump(DATA, ('core.gym',), 'gyms.json')
+filter_dump(DATA, ('core.language',), 'languages.json')
+filter_dump(DATA, ('core.license',), 'licenses.json')
+filter_dump(DATA, ('core.repetitionunit',), 'repetition_units.json')
 
 #
 # Configurations
 #
-filter_dump(data, ('config.languageconfig',), 'language_config.json')
-filter_dump(data, ('config.gymconfig',), 'gym_config.json')
+filter_dump(DATA, ('config.languageconfig',), 'language_config.json')
+filter_dump(DATA, ('config.gymconfig',), 'gym_config.json')
 
 #
 # Other
 #
-filter_dump(data, ('auth.group',), 'groups.json')
-filter_dump(data, ('auth.user',), 'users.json')
+filter_dump(DATA, ('auth.group',), 'groups.json')
+filter_dump(DATA, ('auth.user',), 'users.json')
