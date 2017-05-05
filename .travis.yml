@@ -67,4 +67,4 @@ script:
 
 # Integration settings for Slack channel
 notifications:
-  slack: andela:IFUEJRU4uARfzKu11yTVkfH1
+    slack: andela:eLNWAQ52DztQdwOqUExP4kN8
