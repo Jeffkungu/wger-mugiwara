@@ -41,6 +41,10 @@ from wger.utils.models import AbstractLicenseModel
 from wger.utils.units import AbstractWeight
 from wger.weight.models import WeightEntry
 
+# Add signals import
+from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
+from django.dispatch import receiver
+
 MEALITEM_WEIGHT_GRAM = '1'
 MEALITEM_WEIGHT_UNIT = '2'
 
@@ -109,48 +113,57 @@ class NutritionPlan(models.Model):
         '''
         Sums the nutritional info of all items in the plan
         '''
-        use_metric = self.user.userprofile.use_metric
-        unit = 'kg' if use_metric else 'lb'
-        result = {'total': {'energy': 0,
-                            'protein': 0,
-                            'carbohydrates': 0,
-                            'carbohydrates_sugar': 0,
-                            'fat': 0,
-                            'fat_saturated': 0,
-                            'fibres': 0,
-                            'sodium': 0},
-                  'percent': {'protein': 0,
-                              'carbohydrates': 0,
-                              'fat': 0},
-                  'per_kg': {'protein': 0,
-                             'carbohydrates': 0,
-                             'fat': 0},
-                  }
 
-        # Energy
-        for meal in self.meal_set.select_related():
-            values = meal.get_nutritional_values(use_metric=use_metric)
-            for key in result['total'].keys():
-                result['total'][key] += values[key]
+        # fetch nutritional data from cache if cache exists
+        result = cache.get(cache_mapper.get_nutritional_data(self))
 
-        energy = result['total']['energy']
+        # if not in cache fetch from the data base
+        if not result:
+            use_metric = self.user.userprofile.use_metric
+            unit = 'kg' if use_metric else 'lb'
+            result = {'total': {'energy': 0,
+                                'protein': 0,
+                                'carbohydrates': 0,
+                                'carbohydrates_sugar': 0,
+                                'fat': 0,
+                                'fat_saturated': 0,
+                                'fibres': 0,
+                                'sodium': 0},
+                        'percent': {'protein': 0,
+                                    'carbohydrates': 0,
+                                    'fat': 0},
+                        'per_kg': {'protein': 0,
+                                    'carbohydrates': 0,
+                                    'fat': 0},
+                        }
 
-        # In percent
-        if energy:
-            for key in result['percent'].keys():
-                result['percent'][key] = \
-                    result['total'][key] * ENERGY_FACTOR[key][unit] / energy * 100
+            # Energy
+            for meal in self.meal_set.select_related():
+                values = meal.get_nutritional_values(use_metric=use_metric)
+                for key in result['total'].keys():
+                    result['total'][key] += values[key]
 
-        # Per body weight
-        weight_entry = self.get_closest_weight_entry()
-        if weight_entry:
-            for key in result['per_kg'].keys():
-                result['per_kg'][key] = result['total'][key] / weight_entry.weight
+            energy = result['total']['energy']
 
-        # Only 2 decimal places, anything else doesn't make sense
-        for key in result.keys():
-            for i in result[key]:
-                result[key][i] = Decimal(result[key][i]).quantize(TWOPLACES)
+            # In percent
+            if energy:
+                for key in result['percent'].keys():
+                    result['percent'][key] = \
+                        result['total'][key] * ENERGY_FACTOR[key][unit] / energy * 100
+
+            # Per body weight
+            weight_entry = self.get_closest_weight_entry()
+            if weight_entry:
+                for key in result['per_kg'].keys():
+                    result['per_kg'][key] = result['total'][key] / weight_entry.weight
+
+            # Only 2 decimal places, anything else doesn't make sense
+            for key in result.keys():
+                for i in result[key]:
+                    result[key][i] = Decimal(result[key][i]).quantize(TWOPLACES)
+
+            # save to cache
+            cache.set(cache_mapper.get_nutritional_data(self), result)
 
         return result
 
@@ -198,6 +211,15 @@ class NutritionPlan(models.Model):
         # even more
         else:
             return 4
+
+@receiver(post_save, sender=NutritionPlan)
+@receiver(post_delete, sender=NutritionPlan)
+def delete_nutrition_info_on_deleting_or_saving_a_nutrition_plan(sender, **kwargs):
+    '''
+    Delete the nutrition info dict from cache
+    '''
+    pik = kwargs['instance'].pk
+    cache.delete(cache_mapper.get_nutritional_data(pik))
 
 
 @python_2_unicode_compatible
@@ -545,7 +567,7 @@ class Meal(models.Model):
         Sums the nutrional info of all items in the meal
 
         :param use_metric Flag that controls the units used
-        '''
+        '''  
         nutritional_info = {'energy': 0,
                             'protein': 0,
                             'carbohydrates': 0,
@@ -564,9 +586,18 @@ class Meal(models.Model):
 
         # Only 2 decimal places, anything else doesn't make sense
         for i in nutritional_info:
-            nutritional_info[i] = Decimal(nutritional_info[i]).quantize(TWOPLACES)
+            nutritional_info[i] = Decimal(nutritional_info[i]).quantize(TWOPLACES)   
 
         return nutritional_info
+
+@receiver(post_save, sender=Meal)
+@receiver(post_delete, sender=Meal)
+def delete_nutrition_info_on_deleting_or_saving_a_meal(sender, **kwargs):
+    '''
+    Delete the nutrition info dict from cache
+    '''
+    foreign_key = kwargs['instance'].plan
+    cache.delete(cache_mapper.get_nutritional_data(foreign_key.pk))
 
 
 @python_2_unicode_compatible
@@ -624,6 +655,7 @@ class MealItem(models.Model):
 
         :param use_metric Flag that controls the units used
         '''
+
         nutritional_info = {'energy': 0,
                             'protein': 0,
                             'carbohydrates': 0,
@@ -637,8 +669,8 @@ class MealItem(models.Model):
             item_weight = self.amount
         else:
             item_weight = (self.amount *
-                           self.weight_unit.amount *
-                           self.weight_unit.gram)
+                        self.weight_unit.amount *
+                        self.weight_unit.gram)
 
         nutritional_info['energy'] += self.ingredient.energy * item_weight / 100
         nutritional_info['protein'] += self.ingredient.protein * item_weight / 100
@@ -675,3 +707,13 @@ class MealItem(models.Model):
             nutritional_info[i] = Decimal(nutritional_info[i]).quantize(TWOPLACES)
 
         return nutritional_info
+
+@receiver(post_save, sender=MealItem)
+@receiver(post_delete, sender=MealItem)
+def delete_nutrition_info_on_deleting_or_saving_a_meal_item(sender, **kwargs):
+    '''
+    Delete the nutrition info dict from cache
+    '''
+    foreign_key = kwargs['instance'].meal.plan
+    cache.delete(cache_mapper.get_nutritional_data(foreign_key.pk))
+        
