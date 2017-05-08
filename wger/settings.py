@@ -15,17 +15,17 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'test_wger',
-        'USER': 'postgres',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': '/Users/Mugiwara_Munyi/webapps/wger/wger-mugiwara/wger/database.sqlite',
+        'USER': '',
         'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'HOST': '',
         'PORT': '',
     }
 }
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '1a+xqy=rfdxsva(n#9gp_lculqh8vf&etk!^@&rr%qdd_3u1d9'
+SECRET_KEY = 'hwsbt(+r6#l0s=oms05pbq-88#p_g-ny&r1(__2zf!kplb7x(u'
 
 # Your reCaptcha keys
 RECAPTCHA_PUBLIC_KEY = ''
