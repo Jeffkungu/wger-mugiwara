@@ -47,7 +47,6 @@ class GymConfigTestCase(WorkoutManagerTestCase):
                              'g-recaptcha-response': 'PASSED', }
         self.client.post(reverse('core:user:registration'), registration_data)
         new_user = User.objects.all().last()
-
         self.assertEqual(new_user.userprofile.gym, gym)
         self.assertEqual(new_user.gymuserconfig.gym, gym)
 
