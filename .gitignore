@@ -46,9 +46,12 @@ coverage.xml
 
 # Django stuff:
 *.log
-settings*.py
+settings.py
 *.sqlite
 /CACHE
+
+# DS_Store files
+.DS_Store
 
 # Sphinx documentation
 docs/_build/
