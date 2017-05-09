@@ -65,9 +65,9 @@ class ExerciseInfoViewSet(viewsets.ReadOnlyModelViewSet):
                      'equipment',
                      'license',
                      'license_author')
-    
+
     def search(request):
-        
+
         '''
         Searches for exercise info.
 
@@ -81,10 +81,10 @@ class ExerciseInfoViewSet(viewsets.ReadOnlyModelViewSet):
             languages = load_item_languages(LanguageConfig.SHOW_ITEM_EXERCISES,
                                             language_code=request.GET.get('language', None))
             exercises = (Exercise.objects.filter(name__icontains=q)
-                        .filter(language__in=languages)
-                        .filter(status=Exercise.STATUS_ACCEPTED)
-                        .order_by('category__name', 'name')
-                        .distinct())
+                         .filter(language__in=languages)
+                         .filter(status=Exercise.STATUS_ACCEPTED)
+                         .order_by('category__name', 'name')
+                         .distinct())
 
             for exercise in exercises:
                 if exercise.main_image:
