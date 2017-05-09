@@ -218,9 +218,9 @@ def registration(request):
 
     if request.method == 'POST':
         form = FormClass(data=request.POST)
-
         # If the data is valid, log in and redirect
         if form.is_valid():
+
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
