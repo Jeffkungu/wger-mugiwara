@@ -129,13 +129,13 @@ class NutritionPlan(models.Model):
                                 'fat_saturated': 0,
                                 'fibres': 0,
                                 'sodium': 0},
-                        'percent': {'protein': 0,
-                                    'carbohydrates': 0,
-                                    'fat': 0},
-                        'per_kg': {'protein': 0,
-                                    'carbohydrates': 0,
-                                    'fat': 0},
-                        }
+                      'percent': {'protein': 0,
+                                  'carbohydrates': 0,
+                                  'fat': 0},
+                      'per_kg': {'protein': 0,
+                                 'carbohydrates': 0,
+                                 'fat': 0},
+                      }
 
             # Energy
             for meal in self.meal_set.select_related():
@@ -211,6 +211,7 @@ class NutritionPlan(models.Model):
         # even more
         else:
             return 4
+
 
 @receiver(post_save, sender=NutritionPlan)
 @receiver(post_delete, sender=NutritionPlan)
@@ -567,7 +568,7 @@ class Meal(models.Model):
         Sums the nutrional info of all items in the meal
 
         :param use_metric Flag that controls the units used
-        '''  
+        '''
         nutritional_info = {'energy': 0,
                             'protein': 0,
                             'carbohydrates': 0,
@@ -586,9 +587,10 @@ class Meal(models.Model):
 
         # Only 2 decimal places, anything else doesn't make sense
         for i in nutritional_info:
-            nutritional_info[i] = Decimal(nutritional_info[i]).quantize(TWOPLACES)   
+            nutritional_info[i] = Decimal(nutritional_info[i]).quantize(TWOPLACES)
 
         return nutritional_info
+
 
 @receiver(post_save, sender=Meal)
 @receiver(post_delete, sender=Meal)
@@ -669,8 +671,8 @@ class MealItem(models.Model):
             item_weight = self.amount
         else:
             item_weight = (self.amount *
-                        self.weight_unit.amount *
-                        self.weight_unit.gram)
+                           self.weight_unit.amount *
+                           self.weight_unit.gram)
 
         nutritional_info['energy'] += self.ingredient.energy * item_weight / 100
         nutritional_info['protein'] += self.ingredient.protein * item_weight / 100
@@ -708,6 +710,7 @@ class MealItem(models.Model):
 
         return nutritional_info
 
+
 @receiver(post_save, sender=MealItem)
 @receiver(post_delete, sender=MealItem)
 def delete_nutrition_info_on_deleting_or_saving_a_meal_item(sender, **kwargs):
@@ -716,4 +719,3 @@ def delete_nutrition_info_on_deleting_or_saving_a_meal_item(sender, **kwargs):
     '''
     foreign_key = kwargs['instance'].meal.plan
     cache.delete(cache_mapper.get_nutritional_data(foreign_key.pk))
-        
