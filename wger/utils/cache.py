@@ -120,8 +120,8 @@ class CacheKeyMapper(object):
 
     def get_nutritional_data(self, param):
         '''
-        Return nutritional information for current user 
+        Return nutritional information for current user
         '''
-        return self.NUTRITIONAL_DATA.format(self.get_pk(param))    
+        return self.NUTRITIONAL_DATA.format(self.get_pk(param))
 
 cache_mapper = CacheKeyMapper()
