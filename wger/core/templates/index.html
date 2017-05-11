@@ -7,7 +7,27 @@
 {# Header #}
 {#        #}
 {% block header %}
-<script src="{% static 'js/weight.js' %}"></script>
+<script src="{% static 'js/weight.js' %}">
+</script>
+  <script>
+        $(document).ready(function () {
+            // Prevent the form from being submited if JavaScript is enabled
+            $("#search_form").submit(function () {
+                return false;
+            });
+
+            // Init the autocompleter
+            $("#member-search").autocomplete({
+                serviceUrl: '/api/v2/userprofile/search/',
+                dataType: 'json',
+                paramName: 'term',
+                minChars: 3,
+                onSelect: function (suggestion) {
+                     window.location.href = '/core/' + suggestion.data.id + '/view/'
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 
@@ -235,9 +255,20 @@ or, if you don't have one, simply by date.{% endblocktrans %}</em></p>
         </a>
     </div>
     <div class="col-sm-3">
-        <a href="{% url 'weight:add' %}" class="btn btn-success btn-sm wger-modal-dialog">
-            {% trans "Search for other members" %}
-        </a>
+        <form action="{% url 'member-search' %}"
+          method="get"
+          id="member_search_form">
+        <input name="term"
+           type="search"
+           id="member-search"
+           class="ajax-form-element form-control"
+           placeholder="{% trans 'type in a username or email' %}">
+        </form>
+
+        <!--<a href="{% url 'weight:add' %}" class="btn btn-success btn-sm wger-modal-dialog">
+            {% trans "Compare" %}
+        </a>-->
+
     </div>
 </div>
 {% endblock %}

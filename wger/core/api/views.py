@@ -18,7 +18,7 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, api_view
 
 from wger.core.models import (
     UserProfile,
@@ -121,3 +121,36 @@ class WeightUnitViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = WeightUnitSerializer
     ordering_fields = '__all__'
     filter_fields = ('name', )
+
+
+@api_view(['GET'])
+def member_search(request):
+    '''
+    Searches for users.
+
+    This format is currently used by the user search autocompleter
+    '''
+
+    response = request.GET.get('term', None)
+
+    results = []
+    json_response = {}
+    if response:
+        user = User.objects.all().filter(username=response)
+        if len(user) != 0:
+            user = user[0]
+            # import pdb; pdb.set_trace()
+            user_json = {
+                'name': user.username,
+                'data': {
+                    'age': user.userprofile.age,
+                    'height': user.userprofile.height,
+                    'weight': user.userprofile.weight,
+                    'work_intensity': user.userprofile.work_intensity,
+                    'work_hours': user.userprofile.work_hours
+                }
+            }
+            results.append(user_json)
+            json_response['user'] = results
+
+    return Response(json_response)

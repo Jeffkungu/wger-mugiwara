@@ -168,6 +168,9 @@ urlpatterns += [
     url(r'^api/v2/ingredient/search/$',
         nutrition_api_views.search,
         name='ingredient-search'),
+    url(r'^api/v2/userprofile/search/$',
+        core_api_views.member_search,
+        name= 'member-search'),
     url(r'^api/v2/', include(router.urls)),
 ]
 
