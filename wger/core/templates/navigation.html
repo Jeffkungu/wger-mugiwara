@@ -115,6 +115,20 @@
                         {% endif %}
 
 
+                        {#            #}
+                        {# Fitbit tab #}
+                        {#            #}
+                        {% if user.is_authenticated and not user.userprofile.is_temporary %}
+                        <li {% if active_tab == 'fitbit' %}class="active"{% endif %}>
+                            <a href="{% url 'core:fitbit' %}">
+
+                                {% trans "Add App/Integration" %}
+
+                            </a>
+                        </li>
+                        {% endif %}
+
+
                         {#              #}
                         {# Software tab #}
                         {#              #}
@@ -150,6 +164,7 @@
                                 </li>
                             </ul>
                         </li>
+
 
                         {#                     #}
                         {# Options and contact #}
