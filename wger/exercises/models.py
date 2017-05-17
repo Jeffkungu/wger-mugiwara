@@ -34,6 +34,10 @@ from django.core.cache import cache
 from django.core.validators import MinLengthValidator
 from django.conf import settings
 
+# Add signals import
+from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
+from django.dispatch import receiver
+
 from wger.core.models import Language
 from wger.utils.helpers import smart_capitalize
 from wger.utils.managers import SubmissionManager
@@ -76,6 +80,18 @@ class Muscle(models.Model):
         Muscle has no owner information
         '''
         return False
+
+
+@receiver(post_delete, sender=Muscle)
+def update_cache_on_delete(sender, instance, *args, **kwargs):
+    for language in Language.objects.all():
+        delete_template_fragment_cache('muscle-overview', language.id)
+
+
+@receiver(post_save, sender=Muscle)
+def update_cache_on_save(sender, *args, **kwargs):
+    for language in Language.objects.all():
+        delete_template_fragment_cache('muscle-overview', language.id)
 
 
 @python_2_unicode_compatible
@@ -241,6 +257,7 @@ class Exercise(AbstractSubmissionModel, AbstractLicenseModel, models.Model):
             delete_template_fragment_cache('exercise-overview', language.id)
             delete_template_fragment_cache('exercise-overview-mobile', language.id)
             delete_template_fragment_cache('equipment-overview', language.id)
+            cache.delete(make_template_fragment_key('exercise-detail-muscles', [self.id, language.id]))
 
         # Cached workouts
         for set in self.set_set.all():
@@ -260,6 +277,7 @@ class Exercise(AbstractSubmissionModel, AbstractLicenseModel, models.Model):
             delete_template_fragment_cache('exercise-overview', language.id)
             delete_template_fragment_cache('exercise-overview-mobile', language.id)
             delete_template_fragment_cache('equipment-overview', language.id)
+            cache.delete(make_template_fragment_key('exercise-detail-muscles', [self.id, language.id]))
 
         # Cached workouts
         for set in self.set_set.all():
