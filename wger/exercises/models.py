@@ -257,7 +257,8 @@ class Exercise(AbstractSubmissionModel, AbstractLicenseModel, models.Model):
             delete_template_fragment_cache('exercise-overview', language.id)
             delete_template_fragment_cache('exercise-overview-mobile', language.id)
             delete_template_fragment_cache('equipment-overview', language.id)
-            cache.delete(make_template_fragment_key('exercise-detail-muscles', [self.id, language.id]))
+            cache.delete(make_template_fragment_key('exercise-detail-muscles',
+                                                    [self.id, language.id]))
 
         # Cached workouts
         for set in self.set_set.all():
@@ -277,7 +278,8 @@ class Exercise(AbstractSubmissionModel, AbstractLicenseModel, models.Model):
             delete_template_fragment_cache('exercise-overview', language.id)
             delete_template_fragment_cache('exercise-overview-mobile', language.id)
             delete_template_fragment_cache('equipment-overview', language.id)
-            cache.delete(make_template_fragment_key('exercise-detail-muscles', [self.id, language.id]))
+            cache.delete(make_template_fragment_key('exercise-detail-muscles',
+                                                    [self.id, language.id]))
 
         # Cached workouts
         for set in self.set_set.all():

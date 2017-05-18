@@ -307,6 +307,11 @@ def preferences(request):
         return render(request, 'user/preferences.html', template_data)
 
 
+@login_required
+def fitbit_authorisation(request):
+    return render(request, 'wger/core/templates/index.html', {})
+
+
 class UserDeactivateView(LoginRequiredMixin,
                          WgerMultiplePermissionRequiredMixin,
                          RedirectView):
