@@ -136,7 +136,6 @@ def member_search(request):
     results = []
     user_results = []
     json_response = {}
-    json_request = {}
     if response:
         user = User.objects.all().filter(username=response)
         if len(user) != 0:
@@ -164,7 +163,7 @@ def member_search(request):
             }
             user_results.append(current_user)
             results.append(user_json)
-            json_response['user_main'] = user_results
-            json_response['user'] = results
+            json_response['user_main'] = user_results[0]
+            json_response['user'] = results[0]
 
     return render(request, 'compare.html', json_response)
