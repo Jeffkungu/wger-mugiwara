@@ -100,6 +100,7 @@ router.register(r'daysofweek', core_api_views.DaysOfWeekViewSet, base_name='days
 router.register(r'license', core_api_views.LicenseViewSet, base_name='license')
 router.register(r'setting-repetitionunit', core_api_views.RepetitionUnitViewSet, base_name='setting-repetition-unit')
 router.register(r'setting-weightunit', core_api_views.WeightUnitViewSet, base_name='setting-weight-unit')
+# router.register(r'userprofile/search', core_api_views.member_search, base_name='member-search')
 
 # Exercises app
 router.register(r'exercise', exercises_api_views.ExerciseViewSet, base_name='exercise')
@@ -168,7 +169,7 @@ urlpatterns += [
     url(r'^api/v2/ingredient/search/$',
         nutrition_api_views.search,
         name='ingredient-search'),
-    url(r'^api/v2/userprofile/search/$',
+    url(r'^/userprofile/search/$',
         core_api_views.member_search,
         name= 'member-search'),
     url(r'^api/v2/', include(router.urls)),

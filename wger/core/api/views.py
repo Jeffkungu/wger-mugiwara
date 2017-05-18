@@ -16,6 +16,7 @@
 # along with Workout Manager.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.contrib.auth.models import User
+from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, api_view
@@ -123,7 +124,6 @@ class WeightUnitViewSet(viewsets.ReadOnlyModelViewSet):
     filter_fields = ('name', )
 
 
-@api_view(['GET'])
 def member_search(request):
     '''
     Searches for users.
@@ -134,7 +134,9 @@ def member_search(request):
     response = request.GET.get('term', None)
 
     results = []
+    user_results = []
     json_response = {}
+    json_request = {}
     if response:
         user = User.objects.all().filter(username=response)
         if len(user) != 0:
@@ -150,7 +152,19 @@ def member_search(request):
                     'work_hours': user.userprofile.work_hours
                 }
             }
+            current_user = {
+                'name': request.user.username,
+                'data': {
+                    'age': request.user.userprofile.age,
+                    'height': request.user.userprofile.height,
+                    'weight': request.user.userprofile.weight,
+                    'work_intensity': request.user.userprofile.work_intensity,
+                    'work_hours': request.user.userprofile.work_hours
+                }
+            }
+            user_results.append(current_user)
             results.append(user_json)
+            json_response['user_main'] = user_results
             json_response['user'] = results
 
-    return Response(json_response)
+    return render(request, 'compare.html', json_response)
