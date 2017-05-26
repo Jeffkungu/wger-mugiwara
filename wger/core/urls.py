@@ -111,7 +111,7 @@ patterns_user = [
     url(r'^password/change$',
         views.password_change,
         {'template_name': 'user/change_password.html',
-          'post_change_redirect': reverse_lazy('core:user:preferences')},
+           'post_change_redirect': reverse_lazy('core:user:preferences')},
         name='change-password'),
     url(r'^password/reset/$',
         views.password_reset,
