@@ -531,7 +531,6 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return context
 
 
-
 class InactiveUserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     '''
     Overview of all users in the instance
@@ -603,4 +602,3 @@ class InactiveTrainerListView(LoginRequiredMixin, PermissionRequiredMixin, ListV
                                           _('Gym')],
                                  'users': context['object_list']['members']}
         return context
-
