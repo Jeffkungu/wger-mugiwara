@@ -123,6 +123,7 @@ def view(request, pk):
 
     return render(request, 'workout/view.html', template_data)
 
+
 def export(request, pk):
     '''
     Export workouts in json format
@@ -130,22 +131,22 @@ def export(request, pk):
     workout = get_object_or_404(Workout, pk=pk)
     user = workout.user
     is_owner = request.user == user
- 
+
     if not is_owner and not user.userprofile.ro_access:
         return HttpResponseForbidden()
-    
+
     # Process request
     if request.method == 'POST':
- 
+
         data = serializers.serialize('json', Workout.objects.filter(user=request.user))
         response = HttpResponse(data, content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename="workouts.json"'  
- 
+        response['Content-Disposition'] = 'attachment; filename="workouts.json"'
+
         return response
-     
+
     else:
         workout_export_form = WorkoutExportForm({'comment': workout.comment})
- 
+
         template_data = {}
         template_data.update(csrf(request))
         template_data['title'] = _('Export Workout')
@@ -154,8 +155,9 @@ def export(request, pk):
         template_data['form_fields'] = [workout_export_form['comment']]
         template_data['submit_text'] = _('Export')
         template_data['extend_template'] = 'base_empty.html' if request.is_ajax() else 'base.html'
- 
+
         return render(request, 'export.html', template_data)
+
 
 @login_required
 def copy_workout(request, pk):
