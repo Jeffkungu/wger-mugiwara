@@ -140,7 +140,6 @@ def member_search(request):
         user = User.objects.all().filter(username=response)
         if len(user) != 0:
             user = user[0]
-            # import pdb; pdb.set_trace()
             user_json = {
                 'name': user.username,
                 'data': {
@@ -148,6 +147,8 @@ def member_search(request):
                     'height': user.userprofile.height,
                     'weight': user.userprofile.weight,
                     'work_intensity': user.userprofile.work_intensity,
+                    'sport_intensity': user.userprofile.get_sport_intensity_display,
+                    'bmi': user.userprofile.calculate_bmi,
                     'work_hours': user.userprofile.work_hours
                 }
             }
@@ -158,6 +159,8 @@ def member_search(request):
                     'height': request.user.userprofile.height,
                     'weight': request.user.userprofile.weight,
                     'work_intensity': request.user.userprofile.work_intensity,
+                    'sport_intensity': request.user.userprofile.get_sport_intensity_display,
+                    'bmi': user.userprofile.calculate_bmi,
                     'work_hours': request.user.userprofile.work_hours
                 }
             }
