@@ -10,6 +10,7 @@
 
                 <tr> 
                     <td>
+                        <strong>User:</strong>
                     </td>
                     <td>
                         <strong>{{ user.name }}</strong>
@@ -81,4 +82,14 @@
 
             </table>
     </div>
+
+
+{% block sidebar %}
+<h4>{% trans "Info" %}</h4>
+<p>{% blocktrans %}The current workout is selected from your active schedule
+or, if you don't have one, simply by date.{% endblocktrans %}</p>
+
+<p>{% trans "After adding a workout or a nutritional plan, you can edit them to set a goal." %}</p>
+{% endblock %}
+
 {% endblock %}
