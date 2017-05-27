@@ -78,14 +78,21 @@
                     <td>
                         {{ user_main.data.work_hours }}
                     </td>
+                </tr>
+                <tr>
+                    <td>
+                        Sport Intensity:
+                    </td>
                     <td>
                         {{ user.data.sport_intensity }}
                     </td>
                     <td>
                         {{ user_main.data.sport_intensity }}
                     </td>
+                </tr>
+                <tr>
                     <td>
-                        {{ user.data.sport_intensity }}
+                       BMI:
                     </td>
                     <td>
                         {{ user.data.bmi}}
@@ -100,11 +107,15 @@
 
 
 {% block sidebar %}
-<h4>{% trans "Info" %}</h4>
-<p>{% blocktrans %}The current workout is selected from your active schedule
-or, if you don't have one, simply by date.{% endblocktrans %}</p>
+<h4><strong>{% trans "Info" %}</strong></h4>
+<p>{% blocktrans %}The comparisons selected from your active schedule
+or, if you don't have one, simply by default values.{% endblocktrans %}</p>
+
+<p>{% trans "Tip: You can log your weight entires and set a nutritional plan from the dashboard" %}</p>
 
 <p>{% trans "After adding a workout or a nutritional plan, you can edit them to set a goal." %}</p>
+
+<p>{% trans "This feature aims to connect you to any enthusiast like you. Feedback for improvement for this feature is welcome." %}</p>
 {% endblock %}
 
 {% endblock %}
