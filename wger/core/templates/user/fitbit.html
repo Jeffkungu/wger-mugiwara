@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{% trans "Intergrate with Fitbit" %}{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<p>{% blocktrans %}
+    Intergrating with fitbit helps you track and monitor you weight data.
+{% endblocktrans %}</p>
+
+<p>
+<a class="btn btn-primary"
+    href="{{fitbit_auth_link}}">{% trans "Clikck here to intergrate with fitbit." %} »</a>
+</p>
+{% endblock %} 
