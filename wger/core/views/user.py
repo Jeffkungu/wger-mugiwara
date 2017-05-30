@@ -39,6 +39,11 @@ from django.views.generic import (
 from django.conf import settings
 from rest_framework.authtoken.models import Token
 
+from fitbit import FitbitOauth2Client, Fitbit
+import requests
+import datetime
+import base64
+
 from wger.utils.constants import USER_TAB
 from wger.utils.generic_views import WgerFormMixin, WgerMultiplePermissionRequiredMixin
 from wger.utils.user_agents import check_request_amazon, check_request_android
@@ -529,3 +534,65 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
                                           _('Gym')],
                                  'users': context['object_list']['members']}
         return context
+
+
+@login_required
+def fitbit_authorisation(request, code=None):
+    template_data = {}
+    client_id = '228HZK'
+    client_secret = '4dec2436d4ec06586e37154ccaae0941'
+
+    fitbit_client = FitbitOauth2Client(client_id, client_secret)
+    # import pdb; pdb.set_trace();
+
+    if 'code' in request.GET:
+
+        code = request.GET.get("code", "")
+        form = {
+            'client_secret': client_secret,
+            'code': code,
+            'client_id': client_id,
+            'grant_type': 'authorization_code',
+            'redirect_uri': 'http://localhost:8000/en/user/fitbit'
+        }
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            "Authorization": 'Basic MjI4SFpLOjRkZWMyNDM2ZDRlYzA2NTg2ZTM3MTU0Y2NhYWUwOTQx'
+        }
+        response = requests.post(fitbit_client.request_token_url, form, headers=headers).json()
+
+        if "access_token" in response:
+            token = response['access_token']
+            user_id = response['user_id']
+            headers['Authorization'] = 'Bearer ' + token
+
+            response_weight = requests.get('https://api.fitbit.com/1/user/' +
+                                           user_id + '/profile.json', headers=headers)
+            print(response_weight.json())
+
+            weight = response_weight.json()['user']['weight']
+
+            # add weight to the db
+            try:
+                entry = WeightEntry()
+                entry.weight = weight
+                entry.user = request.user
+                entry.date = datetime.date.today()
+                entry.save()
+                messages.success(request,
+                                 _('Wger has successfully synced your weight data'))
+            except Exception as error:
+                if "UNIQUE constraint failed"in str(error):
+                    messages.info(request, _('Data is already synced.'))
+
+            return HttpResponseRedirect(reverse('weight:overview',
+                                                kwargs={'username': request.user.username}))
+
+        else:
+            messages.warning(request, _('Error, something went wrong.'))
+        return render(request, 'user/fitbit.html', template_data)
+
+    template_data['fitbit_auth_link'] = fitbit_client.authorize_token_url(redirect_uri='http://localhost:8000/en/user/fitbit',
+                                                                          prompt='consent')[0]
+
+    return render(request, 'user/fitbit.html', template_data)
