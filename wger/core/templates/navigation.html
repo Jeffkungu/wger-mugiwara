@@ -120,9 +120,9 @@
                         {#            #}
                         {% if user.is_authenticated and not user.userprofile.is_temporary %}
                         <li {% if active_tab == 'fitbit' %}class="active"{% endif %}>
-                            <a href="{% url 'core:fitbit' %}">
+                            <a href="{% url 'core:user:fitbit' %}">
 
-                                {% trans "Add App/Integration" %}
+                                {% trans "Fitbit Integration" %}
 
                             </a>
                         </li>
