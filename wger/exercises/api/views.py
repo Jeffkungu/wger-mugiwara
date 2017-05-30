@@ -46,7 +46,7 @@ from wger.utils.language import load_item_languages, load_language
 from wger.utils.permissions import CreateOnlyPermission
 
 
-class ExerciseViewSet(viewsets.ModelViewSet):
+class ExerciseViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     API endpoint for exercise objects
     '''
